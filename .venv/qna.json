@@ -1,0 +1,12 @@
+[{"question_text": "What is Newton`s Second Law of Motion ?",
+  "options": ["External Force on a body = velocity * acceleration",
+             "External Force on a body = position * velocity",
+             "External Force on a body = mass * acceleration",
+             "External Force on a body = mass * velocity"],
+  "answer": 3},
+ {"question_text": "Which is NOT a unit of velocity?",
+  "options": ["km^2/h^3",
+             "m/s",
+             "miles/hr",
+             "feet/min"],
+  "answer": 1}]
