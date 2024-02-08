@@ -9,8 +9,14 @@ input_box = sg.InputText(tooltip='To-do Item', key='todo')
 
 add_button = sg.Button("Add")
 
+list_box = sg.Listbox(values=func.get_todo_file(),key='todo list',
+                      enable_events=True, size=[45, 10])
+
+edit_button = sg.Button("Edit")
+
 win = sg.Window('To-do App',
-                layout=[[label],[input_box, add_button]],
+                layout=[[label],[input_box, add_button],
+                        [list_box, edit_button]],
                 font={'Helvetica', 20}) #window instance
 i = 0
 
@@ -33,6 +39,8 @@ while True:
             print('You entered: ' + todo_file_text)
             i += 1
 
+            win['todo list'].update(values=todo_file)  # updating the to-do list in listbox instance
+            
             """with open('todos.txt','r') as file:
                 todo_file = file.readline()
             
@@ -44,23 +52,6 @@ while True:
             todo_list.append(todo_text) #list append operation end"""
 
         case 'Show' | 'show':
-            # for v in todo_list: #list is empty at start
-            #    print(str(todo_list.index(v) + 1) + '. ' + v)
-
-            # file = open('todos.txt', 'r')  # open the txt file in read mode
-            # todo_file = file.readlines()  # list of items
-            # for v in todo_file: #iterate
-            #     print(str(todo_file.index(v) + 1) + '. ' + v.strip('\n'))
-            # file.close()
-
-            """with open('todos.txt','r') as file:
-                todo_file = file.readlines()
-                print(type(todo_file))
-
-                for index, item in enumerate(todo_file):
-                    item_n = item.strip('\n')
-                    item_row = f"{index + 1}-{item_n}"
-                    print(item_row)"""
 
             todo_file = func.get_todo_file('todos.txt')
 
@@ -79,23 +70,20 @@ while True:
         case 'Edit' | 'edit':
 
             try:
-                todo_file = func.get_todo_file('todos.txt')
 
-                for index, item in enumerate(todo_file):
-                    item_n = item.strip('\n')
-                    item_row = f"{index + 1}-{item_n}"
-                    print(item_row)
-
-                k = int(key_val['todo'])  # to-do item to be edited
+                todo_edit_item = key_val['todo list'][0]
+                todo_edit_item_upd = key_val['todo']
 
                 todo_file = func.get_todo_file('todos.txt')
 
                 for index, item in enumerate(todo_file):
-                    if index == k - 1:
-                        todo_edit_item_upd = input('Enter the item you want to replace ' + item.strip('\n') + ' with :')
-                        todo_file[k - 1] = todo_edit_item_upd + '\n'
+                    if item == todo_edit_item:
+                        #todo_edit_item_upd = input('Enter the item you want to replace ' + item.strip('\n') + ' with :')
+                        todo_file[index] = todo_edit_item_upd + '\n'
 
                 func.write_todo_file('todos.txt', todo_file)
+
+                win['todo list'].update(values=todo_file) #updating the to-do list in listbox instance
 
             except ValueError:
                 print('Command not compatiable')
@@ -104,15 +92,6 @@ while True:
             except IndexError:
                 print('Command not compatiable')
                 continue
-            """j = 0
-            for item in todo_list:
-
-                if item == todo_edit_item:
-                    todo_edit_item_upd = input('Enter the item you want to replace ' + todo_list[k-1] + ' with :')
-                    todo_list[k-1] = todo_edit_item_upd
-                    break
-                else:
-                    j += 1 #item not found counter"""
 
         case 'Complete' | 'complete':
 
@@ -130,6 +109,9 @@ while True:
             print("Well done! You have completed the task {0}".format(todo_file.pop(k - 1)))
 
             func.write_todo_file('todos.txt', todo_file)
+
+        case 'todo list':
+            win['todo'].update(value=key_val['todo list'][0])
 
         case sg.WIN_CLOSED:
             break
