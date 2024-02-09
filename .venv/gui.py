@@ -14,9 +14,14 @@ list_box = sg.Listbox(values=func.get_todo_file(),key='todo list',
 
 edit_button = sg.Button("Edit")
 
+comp_button = sg.Button("Complete")
+
+exit_button = sg.Button("Exit")
+
 win = sg.Window('To-do App',
                 layout=[[label],[input_box, add_button],
-                        [list_box, edit_button]],
+                        [list_box, edit_button, comp_button],
+                        [exit_button]],
                 font={'Helvetica', 20}) #window instance
 i = 0
 
@@ -97,23 +102,18 @@ while True:
 
             todo_file = func.get_todo_file('todos.txt')
 
-            for index, item in enumerate(todo_file):
-                item_n = item.strip('\n')
-                item_row = f"{index + 1}-{item_n}"
-                print(item_row)
+            item_comp = key_val['todo list'][0]  # row int to be completed
 
-            k = int(key_val['todo'])  # row int to be completed
-
-            todo_file = func.get_todo_file('todos.txt')
-
-            print("Well done! You have completed the task {0}".format(todo_file.pop(k - 1)))
+            todo_file.remove(item_comp)
 
             func.write_todo_file('todos.txt', todo_file)
+
+            win['todo list'].update(values=todo_file)
 
         case 'todo list':
             win['todo'].update(value=key_val['todo list'][0])
 
-        case sg.WIN_CLOSED:
+        case sg.WIN_CLOSED | 'Exit':
             break
 
     """g = input('Continue (Y/N) ?')
