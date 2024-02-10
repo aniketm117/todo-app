@@ -1,8 +1,12 @@
+import time
+
 import functions as func
 import PySimpleGUI as sg
 from functions import get_todo_file, write_todo_file
 from time import strftime as time_n
 
+sg.theme("HotDogStand")
+clock = sg.Text('',key='clock')
 
 label = sg.Text('Type a to-do item')
 input_box = sg.InputText(tooltip='To-do Item', key='todo')
@@ -19,15 +23,17 @@ comp_button = sg.Button("Complete")
 exit_button = sg.Button("Exit")
 
 win = sg.Window('To-do App',
-                layout=[[label],[input_box, add_button],
-                        [list_box, edit_button, comp_button],
-                        [exit_button]],
+                layout=[[clock],
+                    [label],[input_box, add_button],
+                    [list_box, edit_button, comp_button],
+                    [exit_button]],
                 font={'Helvetica', 20}) #window instance
 i = 0
 
 while True:
-    user_action, key_val = win.read() #read method to display the run
+    user_action, key_val = win.read(timeout=200) #read method to display the run
     print(user_action, key_val) #user_action is a string inst, key_val is a tuple inst
+    win['clock'].update(value=time_n("%b %d, %Y %H:%M:%S"))
 
     match user_action:
         case 'Add' | 'add':
@@ -91,24 +97,28 @@ while True:
                 win['todo list'].update(values=todo_file) #updating the to-do list in listbox instance
 
             except ValueError:
-                print('Command not compatiable')
+                sg.popup('Command not compatiable')
                 continue
 
             except IndexError:
-                print('Command not compatiable')
+                sg.popup('Command not compatiable')
                 continue
 
         case 'Complete' | 'complete':
 
-            todo_file = func.get_todo_file('todos.txt')
+            try:
+                todo_file = func.get_todo_file('todos.txt')
 
-            item_comp = key_val['todo list'][0]  # row int to be completed
+                item_comp = key_val['todo list'][0]  # row int to be completed
 
-            todo_file.remove(item_comp)
+                todo_file.remove(item_comp)
 
-            func.write_todo_file('todos.txt', todo_file)
+                func.write_todo_file('todos.txt', todo_file)
 
-            win['todo list'].update(values=todo_file)
+                win['todo list'].update(values=todo_file)
+            except IndexError:
+                sg.popup('Command not compatiable')
+                continue
 
         case 'todo list':
             win['todo'].update(value=key_val['todo list'][0])
