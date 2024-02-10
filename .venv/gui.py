@@ -1,9 +1,12 @@
-import time
-
 import functions as func
 import PySimpleGUI as sg
 from functions import get_todo_file, write_todo_file
 from time import strftime as time_n
+import os
+
+if not os.path.exists('todos.txt'):
+    with open("todos.txt",'w') as file:
+        pass
 
 sg.theme("HotDogStand")
 clock = sg.Text('',key='clock')
@@ -11,16 +14,20 @@ clock = sg.Text('',key='clock')
 label = sg.Text('Type a to-do item')
 input_box = sg.InputText(tooltip='To-do Item', key='todo')
 
-add_button = sg.Button("Add")
+add_button = sg.Button(size=2, image_source="icons8-add-50.png",
+                       tooltip="Add To-do Item", key="Add", image_size=[20,20])
 
 list_box = sg.Listbox(values=func.get_todo_file(),key='todo list',
                       enable_events=True, size=[45, 10])
 
-edit_button = sg.Button("Edit")
+edit_button = sg.Button(size=2, image_source="icons8-edit-50.png",
+                       tooltip="Edit To-do Item", key="Edit", image_size=[50,50])
 
-comp_button = sg.Button("Complete")
+comp_button = sg.Button(size=2, image_source="icons8-complete-50.png",
+                       tooltip="Complete To-do Item", key="Complete", image_size=[50,50])
 
-exit_button = sg.Button("Exit")
+exit_button = sg.Button(size=2, image_source="icons8-exit-50.png",
+                       tooltip="Tschuss", key="Exit", image_size=[50,50])
 
 win = sg.Window('To-do App',
                 layout=[[clock],
@@ -61,22 +68,6 @@ while True:
                 file.writelines(todo_file)
             
             todo_list.append(todo_text) #list append operation end"""
-
-        case 'Show' | 'show':
-
-            todo_file = func.get_todo_file('todos.txt')
-
-            for index, item in enumerate(todo_file):
-
-                if int(key_val['todo']) == 0:
-                    item_n = item.strip('\n')
-                    item_row = f"{index + 1}-{item_n}"
-                    print(item_row)
-                elif int(key_val['todo']) == index + 1:  # iterate once if not all items are to be shown
-                    item_n = item.strip('\n')
-                    item_row = f"{index + 1}-{item_n}"
-                    print(item_row)
-                    break  # cease iteration
 
         case 'Edit' | 'edit':
 
