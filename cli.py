@@ -32,7 +32,7 @@ while True:
 
         todo_file.append(todo_file_text)
 
-        write_todo_file('todos.txt',todo_file)
+        write_todo_file('todos.txt', todo_file)
 
     elif user_action.startswith('edit'):
 
@@ -111,7 +111,7 @@ while True:
 
         print("Well done! You have completed the task {0}".format(todo_file.pop(k - 1)))
 
-        write_todo_file('todos.txt',todo_file)
+        write_todo_file('todos.txt', todo_file)
 
     else:
         print("Command not found")

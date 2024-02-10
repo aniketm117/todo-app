@@ -1,6 +1,6 @@
 import json
 
-with open("qna.json",'r') as file:
+with open("qna.json", 'r') as file:
     cont = file.read() #string
 
 cont_list = json.loads(cont) #list
